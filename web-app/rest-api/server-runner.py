@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 
@@ -43,6 +43,12 @@ def add_book():
     db.session.commit()
 
     return book_schema.jsonify(new_book)
+
+#Open Main Page
+
+@app.route('/', methods=['GET'])
+def about_me():
+    return render_template('home.html', title="Main Library Entrance")
 
 # Get All Books
 @app.route('/book', methods=['GET'])
