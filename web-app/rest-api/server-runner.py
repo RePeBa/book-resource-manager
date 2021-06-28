@@ -33,7 +33,7 @@ books_schema = BookSchema(many=True)
 @app.route('/book', methods=['POST'])
 def add_book():
 
-    firstName = request.json['firtName']
+    firstName = request.json['firstName']
     lastName = request.json['lastName']
     title = request.json['title']
 
