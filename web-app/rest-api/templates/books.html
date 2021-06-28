@@ -4,7 +4,10 @@
 
 <h1>List of books</h1>
 
-{% for b in books %}
-    <h2> Title - {{b.title}},    Author -  {{b.firstName}} {{b.lastName}} </h2>
- {%endfor%}
+{% for b in all_books %}
+
+    <h2> Title  {{b.title}}, Author -  {{b.firstName}}        {{b.lastName}} </h2>
+
+{%endfor%}
+
  {% endblock content %}

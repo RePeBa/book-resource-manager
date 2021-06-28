@@ -2,12 +2,23 @@ from flask import Flask, request, jsonify, render_template
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 
+
 app = Flask(__name__)
+
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////home/stbanas/PycharmProjects/book-resource-manager/books.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 ma = Marshmallow(app)
+
+all_books = [{'firstName': 'Philip',
+          'lastName': 'Zimbardo',
+          'title': 'Lucyfer efect'},
+
+         {'firstName': 'Herman',
+          'lastName': 'Mellvile',
+          'title': 'Mobby dick'}
+         ]
 
 class Book(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -29,12 +40,23 @@ class BookSchema(ma.Schema):
 book_schema = BookSchema()
 books_schema = BookSchema(many=True)
 
+@app.route('/book', methods=['GET'])
+def book():
+    all_books = Book.query.all()
+    print(all_books)
+    return render_template('books.html', title="Books", all_books=all_books)
+#
+#Open Main Page
+@app.route('/', methods=['GET'])
+def about_me():
+    return render_template('home.html', title = "Home")
+
 # Create a Book
 @app.route('/book', methods=['POST'])
 def add_book():
 
-    firstName = request.json['firstName']
-    lastName = request.json['lastName']
+    firstName = request.json["firstName"]
+    lastName = request.json["lastName"]
     title = request.json['title']
 
     new_book = Book(firstName, lastName, title)
@@ -44,18 +66,13 @@ def add_book():
 
     return book_schema.jsonify(new_book)
 
-#Open Main Page
-
-@app.route('/', methods=['GET'])
-def about_me():
-    return render_template('home.html', title="Main Library Entrance")
-
-# Get All Books
-@app.route('/book', methods=['GET'])
-def get_books():
-    all_books = Book.query.all()
-    result = books_schema.dump(all_books)
-    return jsonify(result)
+# # Get All Books
+# @app.route('/book', methods=['GET'])
+# def get_books():
+#     all_books = Book.query.all()
+#     print(all_books)
+#     result = books_schema.dump(all_books)
+#     return jsonify(result)
 
 # Get Single Book
 @app.route('/book/<id>', methods=['GET'])
