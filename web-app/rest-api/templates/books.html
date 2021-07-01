@@ -1,0 +1,11 @@
+{% extends "layout.html" %}
+<title>Books in my private library</title>
+{% block content %}
+
+
+<h1>List of books</h1>
+
+{% for b in books %}
+    <h3> Title - {{b.title}},     Author -  {{b.firstName}} {{b.lastName}} </h3>
+ {%endfor%}
+ {% endblock content %}
