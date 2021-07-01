@@ -1,8 +1,13 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
+from forms import RegistrationForm, LoginForm
+
+
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = 'ac381138f988698c'
+
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////home/stbanas/PycharmProjects/book-resource-manager/books.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
@@ -28,6 +33,13 @@ class BookSchema(ma.Schema):
 # Init schema
 book_schema = BookSchema()
 books_schema = BookSchema(many=True)
+
+
+@app.route('/register', methods=['POST', 'GET'])
+def register():
+    form = RegistrationForm()
+    return  render_template('register.html', title='Register',form=form)
+
 
 # Create a Book
 @app.route('/book', methods=['POST'])
