@@ -35,6 +35,15 @@ class BookSchema(ma.Schema):
 book_schema = BookSchema()
 books_schema = BookSchema(many=True)
 
+# Init Home Page
+@app.route('/', methods=[ "GET"])
+def start():
+    return render_template('home.html', title='Start')
+
+# Init Capture Page
+@app.route('/capture', methods=[ "GET"])
+def capture():
+    return render_template('capture.html', title='Capture')
 
 # Init Registration Page
 @app.route('/register', methods=["POST", "GET"])
