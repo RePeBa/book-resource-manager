@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify, render_template, flash, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
-from forms import RegistrationForm, LoginForm
+from forms import RegistrationForm, LoginForm, BookForm
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'ac381138f988698c'
@@ -15,20 +15,18 @@ ma = Marshmallow(app)
 
 class Book(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    firstName = db.Column(db.String(30))
-    lastName = db.Column(db.String(20))
-    title = db.Column(db.String(30))
+    author = db.Column(db.String(40))
+    title = db.Column(db.String(40))
 
-    def __init__(self, firstName, lastName, title):
-        self.firstName = firstName
-        self.lastName = lastName
+    def __init__(self, author, title):
+        self.author = author
         self.title = title
 
 
 # Book Schema
 class BookSchema(ma.Schema):
     class Meta:
-        fields = ('id', 'firstName', 'lastName', 'title')
+        fields = ('id', 'author', 'title')
 
 
 # Init schema
@@ -65,11 +63,10 @@ def login():
 # Create a Book
 @app.route('/book', methods=['POST'])
 def add_book():
-    firstName = request.json['firstName']
-    lastName = request.json['lastName']
+    author = request.json['author']
     title = request.json['title']
 
-    new_book = Book(firstName, lastName, title)
+    new_book = Book(author, title)
 
     db.session.add(new_book)
     db.session.commit()
@@ -78,11 +75,10 @@ def add_book():
 
 
 # Get All Books
-@app.route('/book', methods=['GET'])
+@app.route('/book', methods=['GET', 'POST'])
 def get_books():
-    all_books = Book.query.all()
-    result = books_schema.dump(all_books)
-    return jsonify(result)
+    form = BookForm()
+    return render_template('books.html', title='Books', form=form)
 
 
 # Get Single Book
@@ -97,12 +93,10 @@ def get_book(id):
 def update_book(id):
     book = Book.query.get(id)
 
-    firstName = request.json['firstName']
-    lastName = request.json['lastName']
+    author = request.json['author']
     title = request.json['title']
 
-    book.firstName = firstName
-    book.lastName = lastName
+    book.author = author
     book.title = title
 
     db.session.commit()

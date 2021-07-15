@@ -1,11 +1,36 @@
 {% extends "layout.html" %}
-<title>Books in my private library</title>
+
 {% block content %}
+<title>Library</title>
+<h1>Choose an option</h1>
+<div class="content-section">
+  <form  method="POST" action="">
+       <fieldset class="form-group">
+        <legend class="border-bottom mb-4">
+         <div class="form-group">
+          {{form.author.label(class="form-control-label") }}
+          {{form.author(class="form-control form-control-lg") }}
+         </div>
+        <div class="form-group">
+      {{form.title.label(class="form-control-label") }}
+      {{form.title(class="form-control form-control-lg") }}
+     </div>
+             <div class="form-group">
+                {{ form.submit (class="btn btn-outline-info") }}
+            </div>
+            <div class="border-top pt-3">
+                <small class="text-muted">
+                Done? <a class="ml-2" href="{{ url_for('login') }}"> Return </a>
+                </small>
+            </div>
 
 
-<h1>List of books</h1>
+        </legend>
 
-{% for b in books %}
-    <h3> Title - {{b.title}},     Author -  {{b.firstName}} {{b.lastName}} </h3>
- {%endfor%}
+
+       </fieldset>
+
+  </form>
+</div>
+
  {% endblock content %}
