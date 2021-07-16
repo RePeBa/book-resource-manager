@@ -15,12 +15,27 @@ ma = Marshmallow(app)
 
 class Book(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    author = db.Column(db.String(40))
-    title = db.Column(db.String(40))
+    author = db.Column(db.String(50))
+    title = db.Column(db.String(100))
 
     def __init__(self, author, title):
         self.author = author
         self.title = title
+
+    def __repr__(self):
+        return f"Book('{self.author}', '{self.title}')"
+
+
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(20), unique=True, nullable=False)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    # image_file = db.Column(db.String(20), nullable=False, default='default.jpg')
+    password = db.Column(db.String(60), nullable=False)
+    # posts = db.relationship('Post', backref='author', lazy=True)
+
+    def __repr__(self):
+        return f"User('{self.username}', '{self.email}')"
 
 
 # Book Schema
