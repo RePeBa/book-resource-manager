@@ -17,6 +17,7 @@ class Book(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     author = db.Column(db.String(50))
     title = db.Column(db.String(100))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
     def __init__(self, author, title):
         self.author = author
@@ -28,11 +29,11 @@ class Book(db.Model):
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(20), unique=True, nullable=False)
+    username = db.Column(db.authorString(20), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     # image_file = db.Column(db.String(20), nullable=False, default='default.jpg')
     password = db.Column(db.String(60), nullable=False)
-    # posts = db.relationship('Post', backref='author', lazy=True)
+    book = db.relationship('Book', backref='user_id', lazy=True)
 
     def __repr__(self):
         return f"User('{self.username}', '{self.email}')"
@@ -69,7 +70,7 @@ def register():
 
 
 # Init Login Page
-@app.route('/login')
+@app.route('/login', methods=["POST", "GET"])
 def login():
     form = LoginForm()
     return render_template('login.html', title='Login', form=form)
