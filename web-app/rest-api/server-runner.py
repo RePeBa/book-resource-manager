@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify, render_template, redirect, flash, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 from forms import BookForm
@@ -6,6 +6,7 @@ from forms import BookForm
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////home/stbanas/PycharmProjects/book-resource-manager/dbase.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SECRET_KEY'] = ['qwerty']
 
 db = SQLAlchemy(app)
 ma = Marshmallow(app)
@@ -30,9 +31,20 @@ books_schema = BookSchema(many=True)
 
 
 # Display Add Book form
-@app.route('/addbook', methods=['GET'])
+@app.route('/addbook', methods=['GET', 'POST'])
 def view_book_form():
     form = BookForm()
+    if form.validate_on_submit():
+        new_book = Book(author=form.author.data, title=form.title.data)
+        db.session.add(new_book)
+        db.session.commit()
+        flash('New book seved.')
+    else:
+        new_book = Book(author=form.author.data, title=form.title.data)
+        db.session.add(new_book)
+        db.session.commit()
+        flash('New book seved.')
+        return redirect(url_for('add_book'))
     return render_template('books.html', title='Books', form=form)
 
 # Add Book from Body

@@ -7,6 +7,6 @@ class BookForm(FlaskForm):
 
     title = StringField('Title', validators=[DataRequired(), Length(min=1, max=60)])
 
-    submit = SubmitField('Confirm')
+    submit = SubmitField('Save')
 
 
