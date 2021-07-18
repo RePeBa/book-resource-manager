@@ -2,15 +2,12 @@
 
 {% block content %}
 <title>Register</title>
-<h1>Please sign up</h1>
+<h1>Please, sign up</h1>
 <div class="content-section">
   <form  method="POST" action="">
    {{form.hidden_tag()}}
        <fieldset class="form-group">
         <legend class="border-bottom mb-4">
-         <h1>
-          Join today
-         </h1>
          <div class="form-group">
           {{form.username.label(class="form-control-label") }}
           {{form.username(class="form-control form-control-lg") }}

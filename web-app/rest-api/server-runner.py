@@ -1,12 +1,12 @@
 from flask import Flask, request, jsonify, render_template, flash, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
-from forms import RegistrationForm, LoginForm, BookForm
+from forms import RegistrationForm, LoginForm, BookForm, NameForm
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'ac381138f988698c'
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////home/stbanas/PycharmProjects/book-resource-manager/books.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////home/stbanas/PycharmProjects/book-resource-manager/dbase.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
@@ -14,29 +14,62 @@ ma = Marshmallow(app)
 
 
 class Book(db.Model):
+    # __tablename__ = 'books'
     id = db.Column(db.Integer, primary_key=True)
-    author = db.Column(db.String(40))
-    title = db.Column(db.String(40))
+    author = db.Column(db.String(60))
+    title = db.Column(db.String(60))
+    # user = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
     def __init__(self, author, title):
         self.author = author
         self.title = title
 
+class User(db.Model):
+    __tablename__ = 'users'
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(20), unique=True, nullable=False)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    # image_file = db.Column(db.String(20), nullable=False, default='default.jpg')
+    password = db.Column(db.String(60), nullable=False)
+    # books = db.relationship('Book', backref='user', lazy=True)
+    # role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
+
+    def __repr__(self):
+        return f"User('{self.username}', '{self.email}', '{self.image_file}')"
+
+class Role(db.Model):
+    __tablename__ = 'roles'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(64), unique=True)
+    # users = db.relatioship('User', backref='role')
+
+    def __repr__(self):
+        return f"Role( {self.name})"
 
 # Book Schema
 class BookSchema(ma.Schema):
     class Meta:
         fields = ('id', 'author', 'title')
 
+# User Schema
+class UserSchema(ma.Schema):
+    class Meta:
+        fields = ('id', 'username', 'email', 'password', 'books')
+
+# Role Schema
+class RoleSchema(ma.Schema):
+    class Meta:
+        fields = ('id', 'name', 'role')
 
 # Init schema
 book_schema = BookSchema()
 books_schema = BookSchema(many=True)
 
-# Init Capture Page
-@app.route('/capture', methods=[ "GET"])
-def capture():
-    return render_template('capture.html', title='Capture')
+user_schema = UserSchema()
+users_schema = UserSchema(many=True)
+
+role_schema = RoleSchema()
+roles_schema = RoleSchema(many=True)
 
 # Init Registration Page
 @app.route('/register', methods=["POST", "GET"])
@@ -44,9 +77,8 @@ def register():
     form = RegistrationForm()
     if form.validate_on_submit():
         flash(f'Account created for {form.username.data}!', 'success')
-        return redirect(url_for('login'))
+        return redirect(url_for('/'))
     return render_template('register.html', title='Register', form=form)
-
 
 # Init Login Page
 @app.route('/login', methods=['GET', 'POST'])
@@ -61,15 +93,32 @@ def login():
     return render_template('login.html', title='Login', form=form)
 
 # Home Page
-
-@app.route('/', methods=['GET'])
+@app.route('/', methods=['GET', 'POST'])
 def index():
-    return render_template('index.html', title='Home Page')
+    # form = NameForm()
+    # if form.validate_on_submit():
+    #     # session['name'] = form.name.data
+    #     user = User.query.filter_by(username=form.name.data).first()
+    #     if user is None:
+    #         user = User(username=form.name.data)
+    #         db.session.add(user)
+    #         db.session.commit()
+    #         # session['known'] = False
+    #     else:
+    #         # session['known'] = True
+    #     # session['name'] = form.name.data
+    #         form.name.data = ''
+    #     return redirect(url_for('index'))
+    return render_template('index.html') #, , form = formname = session.get('name'), known=session.get('known', False)
 
+# Add Book from Capture Page
+@app.route('/book/modify/add/capture', methods=['GET', 'POST'])
+def modify_add_capture():
+    return render_template('capture.html', title='Capture')
 
-# Create a Book
-@app.route('/book', methods=['POST'])
-def add_book():
+# Add Book by JSON
+@app.route('/book/modify/add/json', methods=['POST'])
+def modify_add_json():
     author = request.json['author']
     title = request.json['title']
 
@@ -80,45 +129,55 @@ def add_book():
 
     return book_schema.jsonify(new_book)
 
+# Create a Modify_manual endpoint
+@app.route('/book/modify/add/manual', methods=['GET','POST'])
+def modify_add_manual():
+    form = BookForm()
+    return render_template('books.html', title='Modify', form=form)
+
+# Create a Modify endpoint
+@app.route('/book/modify', methods=['GET','POST'])
+def modify():
+        return render_template('modify.html', title='Modify')
 
 # Get All Books
-@app.route('/book', methods=['GET', 'POST'])
+@app.route('/book/list', methods=['GET'])
 def get_books():
     form = BookForm()
-    return render_template('books.html', title='Books', form=form)
+    return render_template('role.html', title='List',form=form)
 
 
-# Get Single Book
-@app.route('/book/<id>', methods=['GET'])
-def get_book(id):
-    book = Book.query.get(id)
-    return book_schema.jsonify(book)
+# # Get Single Book
+# @app.route('/book/<id>', methods=['GET'])
+# def get_book(id):
+#     book = Book.query.get(id)
+#     return book_schema.jsonify(book)
 
 
-# Update a Book
-@app.route('/book/<id>', methods=['PUT'])
-def update_book(id):
-    book = Book.query.get(id)
-
-    author = request.json['author']
-    title = request.json['title']
-
-    book.author = author
-    book.title = title
-
-    db.session.commit()
-
-    return book_schema.jsonify(book)
-
-
-# Delete Book
-@app.route('/book/<id>', methods=['DELETE'])
-def delete_book(id):
-    book = Book.query.get(id)
-    db.session.delete(book)
-    db.session.commit()
-
-    return book_schema.jsonify(book)
+# # Update a Book
+# @app.route('/book/<id>', methods=['PUT'])
+# def update_book(id):
+#     book = Book.query.get(id)
+#
+#     author = request.json['author']
+#     title = request.json['title']
+#
+#     book.author = author
+#     book.title = title
+#
+#     db.session.commit()
+#
+#     return book_schema.jsonify(book)
+#
+#
+# # Delete Book
+# @app.route('/book/<id>', methods=['DELETE'])
+# def delete_book(id):
+#     book = Book.query.get(id)
+#     db.session.delete(book)
+#     db.session.commit()
+#
+#     return book_schema.jsonify(book)
 
 
 # Run Server
