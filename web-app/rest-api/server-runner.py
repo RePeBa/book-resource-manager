@@ -33,11 +33,6 @@ class BookSchema(ma.Schema):
 book_schema = BookSchema()
 books_schema = BookSchema(many=True)
 
-# Init Home Page
-@app.route('/', methods=[ "GET"])
-def start():
-    return render_template('home.html', title='Start')
-
 # Init Capture Page
 @app.route('/capture', methods=[ "GET"])
 def capture():
@@ -54,10 +49,22 @@ def register():
 
 
 # Init Login Page
-@app.route('/login')
+@app.route('/login', methods=['GET', 'POST'])
 def login():
     form = LoginForm()
+    if form.validate_on_submit():
+        if form.email.data == 'admin@blog.com' and form.password.data == 'password':
+            flash('You have been logged in!', 'success')
+            return redirect(url_for('index'))
+        else:
+            flash('Login Unsuccessful. Please check username and password', 'danger')
     return render_template('login.html', title='Login', form=form)
+
+# Home Page
+
+@app.route('/', methods=['GET'])
+def index():
+    return render_template('index.html', title='Home Page')
 
 
 # Create a Book
