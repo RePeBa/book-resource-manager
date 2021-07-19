@@ -14,7 +14,7 @@ ma = Marshmallow(app)
 
 
 class Book(db.Model):
-    # __tablename__ = 'books'
+    __tablename__ = 'books'
     id = db.Column(db.Integer, primary_key=True)
     author = db.Column(db.String(60))
     title = db.Column(db.String(60))
@@ -117,7 +117,7 @@ def modify_add_capture():
     return render_template('capture.html', title='Capture')
 
 # Add Book by JSON
-@app.route('/book/modify/add/json', methods=['POST'])
+@app.route('/book/modify/add/json', methods=['POST','GET'])
 def modify_add_json():
     author = request.json['author']
     title = request.json['title']
@@ -129,29 +129,49 @@ def modify_add_json():
 
     return book_schema.jsonify(new_book)
 
-# Create a Modify_manual endpoint
+# Create / Modify_manual endpoint
 @app.route('/book/modify/add/manual', methods=['GET','POST'])
-def modify_add_manual():
-    form = BookForm()
-    return render_template('books.html', title='Modify', form=form)
+def createBook():
+    form = BookForm(request.form)
+    books = Book.query.all()
+    if form.validate_on_submit():
+        book = Book(author=form.author.data, title=form.title.data)
+        db.session.add(book)
+        db.session.commit()
+        flash("Added Book Successfully")
+        return redirect(url_for("book/modify/add/"))
+    return render_template("books.html", title="Modify", form=form, book=books)
 
 # Create a Modify endpoint
 @app.route('/book/modify', methods=['GET','POST'])
 def modify():
         return render_template('modify.html', title='Modify')
 
+# Create a Modify / Mode endpoint
+@app.route('/book/modify/mode', methods=['GET','POST'])
+def modify_mode():
+        return render_template('modify.html', title='Modify')
+
+# Create a Modify_add endpoint
+@app.route('/book/modify/add', methods=['GET','POST'])
+def modify_add():
+    return render_template('modify.html', title='Modify')
+
 # Get All Books
 @app.route('/book/list', methods=['GET'])
 def get_books():
-    form = BookForm()
-    return render_template('role.html', title='List',form=form)
+    form = BookForm(request.form)
+    books = Book.query.all()
+    db.session.commit()
+    flash("List of books displayed successfully")
+    return book_schema.jsonify(books)
 
 
 # # Get Single Book
 # @app.route('/book/<id>', methods=['GET'])
 # def get_book(id):
 #     book = Book.query.get(id)
-#     return book_schema.jsonify(book)
+#
 
 
 # # Update a Book
@@ -165,19 +185,20 @@ def get_books():
 #     book.author = author
 #     book.title = title
 #
-#     db.session.commit()
+#
 #
 #     return book_schema.jsonify(book)
 #
 #
-# # Delete Book
-# @app.route('/book/<id>', methods=['DELETE'])
-# def delete_book(id):
-#     book = Book.query.get(id)
-#     db.session.delete(book)
-#     db.session.commit()
-#
-#     return book_schema.jsonify(book)
+# Delete Book
+@app.route("/book/modify/delete/<int:book_id>", methods=["GET", "POST"])
+def delete_book(book_id):
+    book = Book.query.get(book_id)
+    if True:
+        db.session.delete(book)
+        db.session.commit()
+        return redirect(url_for("modify"))
+    return render_template()
 
 
 # Run Server
