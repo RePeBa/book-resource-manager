@@ -1,30 +1,31 @@
 {% extends "layout.html" %}
 
 {% block content %}
-<title>Modify</title>
+<title>Add/Remove</title>
+
 <h2>Choose an option</h2>
 <div class="content-section">
              <div class="form-group">
                  </div>
 
             <div class="border-top pt-3">
-                <small class="text-muted">
-                Done? <a class="ml-2" href="{{ url_for('createBook') }}"> Add </a>
-                </small>
+                <a class="text-muted">
+               <a class="ml-2" href="{{ url_for('createBook') }}"> Add / Remove by Hand </a>
+                </a>
             </div>
 
             <div class="border-top pt-3">
-                <small class="text-muted">
-                <a class="ml-2" href="{{ url_for('modify_add_capture') }}"> Change </a>
-                </small>
-            </div>
+                <a class="text-muted">
+                <a class="ml-2" href="{{ url_for('modify_add_capture') }}"> Take Photo</a>
+                </a>
 
-            <div class="border-top pt-3">
-                <small class="text-muted">
-                <a class="ml-2" href="{{ url_for('delete_book', book_id=1) }}"> Delete </a>
-                </small>
-            </div>
+<!--            <div class="border-top pt-3">-->
+<!--                <a class="text-muted">-->
+<!--                <a class="ml-2" href="{{ url_for('delete_book', book_id=3) }}"> Delete </a>-->
+<!--                </a>-->
+<!--            </div>-->
 
+            </div>
             <div class="border-top pt-3">
                 <small class="text-muted">
                 <a class="ml-2" href="{{ url_for('login')}}"> Return </a>

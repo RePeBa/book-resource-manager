@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<title>List</title>
+<h3> List of books in my Library </h3>
+<table id="table_id">
+<thead>
+    <tr >
+         <th scope="#">Id</th>
+        <th scope="#">Author</th>
+        <th scope="#">Title</th>
+        <th scope="#">Action</th>
+    </tr>
+</thead>
+{% for book in books %}
+
+        <td>{{book.id}}</td>
+        <td>{{book.author}}</td>
+        <td>{{book.title}}</td>
+
+    </tr>
+{% endfor %}
+</table>
+<div class="border-top pt-3">
+                <small class="text-muted">
+                <a class="ml-2" href="{{ url_for('get_books') }}"> Return </a>
+                </small>
+            </div>
+{% endblock content %}

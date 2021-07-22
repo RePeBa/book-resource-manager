@@ -12,7 +12,6 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 ma = Marshmallow(app)
 
-
 class Book(db.Model):
     __tablename__ = 'books'
     id = db.Column(db.Integer, primary_key=True)
@@ -24,18 +23,22 @@ class Book(db.Model):
         self.author = author
         self.title = title
 
+    def __repr__(self):
+        return f"Author('{self.author}', '{self.title}')"
+
+
 class User(db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(20), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
-    # image_file = db.Column(db.String(20), nullable=False, default='default.jpg')
     password = db.Column(db.String(60), nullable=False)
+    # image_file = db.Column(db.String(20), nullable=False, default='default.jpg')
     # books = db.relationship('Book', backref='user', lazy=True)
     # role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
 
     def __repr__(self):
-        return f"User('{self.username}', '{self.email}', '{self.image_file}')"
+        return f"User('{self.username}', '{self.email}')" # , '{self.image_file}'
 
 class Role(db.Model):
     __tablename__ = 'roles'
@@ -139,18 +142,18 @@ def createBook():
         db.session.add(book)
         db.session.commit()
         flash("Added Book Successfully")
-        return redirect(url_for("book/modify/add/"))
-    return render_template("books.html", title="Modify", form=form, book=books)
+        return redirect(url_for("createBook"))
+    return render_template("bookList.html", title="Books", form=form, books=books)
 
 # Create a Modify endpoint
 @app.route('/book/modify', methods=['GET','POST'])
 def modify():
         return render_template('modify.html', title='Modify')
 
-# Create a Modify / Mode endpoint
-@app.route('/book/modify/mode', methods=['GET','POST'])
-def modify_mode():
-        return render_template('modify.html', title='Modify')
+# # Create a Modify / Mode endpoint
+# @app.route('/book/modify/mode', methods=['GET','POST'])
+# def modify_mode():
+#         return render_template('modify.html', title='Modify')
 
 # Create a Modify_add endpoint
 @app.route('/book/modify/add', methods=['GET','POST'])
@@ -160,45 +163,17 @@ def modify_add():
 # Get All Books
 @app.route('/book/list', methods=['GET'])
 def get_books():
-    form = BookForm(request.form)
-    books = Book.query.all()
-    db.session.commit()
-    flash("List of books displayed successfully")
-    return book_schema.jsonify(books)
+    return render_template("list.html", title="List")
 
-
-# # Get Single Book
-# @app.route('/book/<id>', methods=['GET'])
-# def get_book(id):
-#     book = Book.query.get(id)
-#
-
-
-# # Update a Book
-# @app.route('/book/<id>', methods=['PUT'])
-# def update_book(id):
-#     book = Book.query.get(id)
-#
-#     author = request.json['author']
-#     title = request.json['title']
-#
-#     book.author = author
-#     book.title = title
-#
-#
-#
-#     return book_schema.jsonify(book)
-#
-#
 # Delete Book
 @app.route("/book/modify/delete/<int:book_id>", methods=["GET", "POST"])
 def delete_book(book_id):
     book = Book.query.get(book_id)
-    if True:
-        db.session.delete(book)
-        db.session.commit()
-        return redirect(url_for("modify"))
-    return render_template()
+    db.session.delete(book)
+    db.session.commit()
+
+    # return book_schema.jsonify(book)
+    return render_template("modify.html", title="Modify")
 
 
 # Run Server
