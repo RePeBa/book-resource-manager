@@ -1,0 +1,66 @@
+{% extends "layout.html" %}
+{% block content %}
+<form action="" method="POST">
+
+    <table>
+        <thead>
+            <tr>
+                <th>Enter new book </th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {{ form.hidden_tag() }}
+            <tr>
+                <td>
+                    {{ form.author.label }}
+                </td>
+                <td>
+                    {{ form.author }}
+                    {% for error in form.author.errors %}
+                        <span style="color: red;">[{{ error }}]</span>
+                    {% endfor %}
+                </td>
+                <td>
+                    {{ form.title.label }}
+                </td>
+                <td>
+                    {{ form.title }}
+                    {% for error in form.title.errors %}
+                        <span style="color: red;">[{{ error }}]</span>
+                    {% endfor %}
+                </td>
+            </tr>
+        </tbody>
+
+        <tfoot>
+            <tr>
+                <th>
+                    {{ form.submit() }}
+                </th>
+            </tr>
+        </tfoot>
+
+    </table>
+</form>
+<table id="table_id">
+<thead>
+    <tr >
+         <th scope="#">Id</th>
+        <th scope="#">Author</th>
+        <th scope="#">Title</th>
+        <th scope="#">Action</th>
+    </tr>
+</thead>
+{% for book in books %}
+    <tr>
+        <td>{{book.id}}</td>
+        <td>{{book.author}}</td>
+        <td>{{book.title}}</td>
+        <td><a href="{{ url_for('delete_book', book_id=book.id) }}">delete</a></td>
+    </tr>
+{% endfor %}
+</table>
+
+
+{% endblock content %}

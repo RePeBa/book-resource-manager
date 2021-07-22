@@ -1,0 +1,38 @@
+{% extends "layout.html" %}
+{% block content %}
+<form action="" method="POST">
+
+    <table>
+        <thead>
+            <tr>
+                <th>List of books in Library </th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {{ form.hidden_tag() }}
+        </tbody>
+
+    </table>
+</form>
+<table id="table_id">
+<thead>
+    <tr >
+         <th scope="#">Id</th>
+        <th scope="#">Author</th>
+        <th scope="#">Title</th>
+        <th scope="#">Action</th>
+    </tr>
+</thead>
+{% for book in books %}
+    <tr>
+        <td>{{book.id}}</td>
+        <td>{{book.author}}</td>
+        <td>{{book.title}}</td>
+<!--        <td><a href="{{ url_for('delete_book', book_id=book.id) }}">delete</a></td>-->
+    </tr>
+{% endfor %}
+</table>
+
+
+{% endblock content %}
