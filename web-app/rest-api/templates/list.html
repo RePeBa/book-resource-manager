@@ -1,11 +1,13 @@
+
 {% extends "layout.html" %}
 {% block content %}
+<h4>List of books in Library</h4>
 <form action="" method="POST">
 
     <table>
         <thead>
             <tr>
-                <th>List of books in Library </th>
+                <th></th>
             </tr>
         </thead>
 
@@ -21,7 +23,6 @@
          <th scope="#">Id</th>
         <th scope="#">Author</th>
         <th scope="#">Title</th>
-        <th scope="#">Action</th>
     </tr>
 </thead>
 {% for book in books %}

@@ -4,7 +4,4 @@ reader = easyocr.Reader(['en']) # need to run only once to load model into memor
 
 result = reader.readtext('AAA.jpg', detail =0)
 
-
-
 print (result)
-# print (result2)

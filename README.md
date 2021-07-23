@@ -1,5 +1,11 @@
 # book-resource-manager
 
+miniframework - Flask as server - might be changed to Django
+
+server at localhost: 5000 - to be adjusted to codeofftopic.pl
+
+
+
 part of bootstrap  to serv in "layout.html" taken from sourcess: 
 
 https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0

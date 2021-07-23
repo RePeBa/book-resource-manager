@@ -115,13 +115,13 @@ def index():
     return render_template('index.html') #, , form = formname = session.get('name'), known=session.get('known', False)
 
 # Add Book from Capture Page
-@app.route('/book/modify/add/NPL', methods=['GET', 'POST'])
-def createBook_NPL():
-    return render_template('speek.html', title='NPL')
+@app.route('/book/modify/add/NLP', methods=['GET', 'POST'])
+def create_book_NLP():
+    return render_template('speek.html', title='NLP')
 # Add Book from Capture Page
 
 @app.route('/book/modify/add/import', methods=['GET', 'POST'])
-def createBook_CSV():
+def create_book_CSV():
     return render_template('import.html', title='Import')
 
 # Add Book from Capture Page
@@ -144,7 +144,7 @@ def modify_add_json():
 
 # Create / Modify_manual endpoint
 @app.route('/book/modify/add/manual', methods=['GET','POST'])
-def createBook():
+def create_book():
     form = BookForm(request.form)
     books = Book.query.all()
     if form.validate_on_submit():
@@ -152,7 +152,7 @@ def createBook():
         db.session.add(book)
         db.session.commit()
         flash("Added Book Successfully")
-        return redirect(url_for("createBook"))
+        return redirect(url_for("create_book"))
     return render_template("bookList.html", title="Books", form=form, books=books)
 
 # Create a Modify endpoint
@@ -178,10 +178,20 @@ def delete_book(book_id):
     book = Book.query.get(book_id)
     db.session.delete(book)
     db.session.commit()
-
-    # return book_schema.jsonify(book)
     return render_template("modify.html", title="Modify")
 
+# Update Book
+@app.route("/book/modify/update/<int:book_id>", methods=["GET", "POST"])
+def update_book(book_id):
+    book = Book.query.get(book_id)
+    form = BookForm(request.form, obj=book)
+    if form.validate_on_submit():
+        form.populate_obj(book)
+        db.session.commit()
+        flash("Updated Book Successfully")
+        return redirect(url_for("create_book"))
+    # return render_template("books.html", title="Book", form=form, book=Book.query.all())
+    return render_template("bookList.html", title="Books", form=form, book=book)
 
 # Run Server
 if __name__ == '__main__':

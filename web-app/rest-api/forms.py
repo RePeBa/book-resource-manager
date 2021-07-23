@@ -20,7 +20,6 @@ class BookForm(FlaskForm):
     author = StringField('Author', validators=[DataRequired(), Length(min=2, max=40)])
     author1 = TextAreaField('OCR')
     title = StringField('Title', validators=[DataRequired(), Length(min=1, max=60)])
-
     submit = SubmitField('Save')
 
 class NameForm(FlaskForm):
