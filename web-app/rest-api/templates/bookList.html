@@ -1,12 +1,33 @@
 {% extends "layout.html" %}
 {% block content %}
+<tbody>
+            {{ form.hidden_tag() }}
+            <tr>
+                <td>
+                    <a>OCR</a>
+                </td>
+
+                <td>
+                    {{ form.author1 }}
+                    {% for error in form.author1.errors %}
+                        <span style="color: red;">[{{ error }}]</span>
+                    {% endfor %}
+                </td>
+            </tr>
+        </tbody>
+
+
 <form action="" method="POST">
 
     <table>
+
         <thead>
             <tr>
                 <th>Enter new book </th>
             </tr>
+
+
+
         </thead>
 
         <tbody>
