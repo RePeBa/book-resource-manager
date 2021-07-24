@@ -178,7 +178,7 @@ def delete_book(book_id):
     book = Book.query.get(book_id)
     db.session.delete(book)
     db.session.commit()
-    return render_template("modify.html", title="Modify")
+    return render_template("modify.html", title="Delete")
 
 # Update Book
 @app.route("/book/modify/update/<int:book_id>", methods=["GET", "POST"])
@@ -189,9 +189,9 @@ def update_book(book_id):
         form.populate_obj(book)
         db.session.commit()
         flash("Updated Book Successfully")
-        return redirect(url_for("create_book"))
+        return redirect(url_for("create_book")) #TODO
     # return render_template("books.html", title="Book", form=form, book=Book.query.all())
-    return render_template("bookList.html", title="Books", form=form, book=book)
+    return render_template("bookList.html", title="Update", form=form, book=book)
 
 # Run Server
 if __name__ == '__main__':

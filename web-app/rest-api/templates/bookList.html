@@ -81,7 +81,6 @@
         <td>{{book.author}}</td>
         <td>{{book.title}}</td>
         <td><a href="{{ url_for('delete_book', book_id=book.id) }}">delete</a></td>
-        <div> <br/></div>
         <td><a href="{{ url_for('update_book', book_id=book.id) }}">update</a></td>
     </tr>
 {% endfor %}
