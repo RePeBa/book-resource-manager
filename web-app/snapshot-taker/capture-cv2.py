@@ -15,6 +15,8 @@ cv2.imshow("View", gray)
 
 cv2.imwrite("AAA.jpg", gray)
 
+print( "If the image is acceptable press any key to subbmit") # TODO - improve format and funcionality
+
 cv2.waitKey(0)
 
 video.release()

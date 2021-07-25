@@ -1,7 +1,7 @@
 from flask import Flask, request, jsonify, render_template, flash, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
-from forms import RegistrationForm, LoginForm, BookForm, NameForm
+from forms import RegistrationForm, LoginForm, BookForm, NameForm, TextAreaField
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'ac381138f988698c'
@@ -112,7 +112,7 @@ def index():
     #     # session['name'] = form.name.data
     #         form.name.data = ''
     #     return redirect(url_for('index'))
-    return render_template('index.html') #, , form = formname = session.get('name'), known=session.get('known', False)
+    return render_template('index.html') # TODO form = formname = session.get('name'), known=session.get('known', False)
 
 # Add Book from Capture Page
 @app.route('/book/modify/add/NLP', methods=['GET', 'POST'])
@@ -143,7 +143,7 @@ def modify_add_json():
     return book_schema.jsonify(new_book)
 
 # Create / Modify_manual endpoint
-@app.route('/book/modify/add/manual', methods=['GET','POST'])
+@app.route('/book/modify/add/mode/manual', methods=['GET','POST'])
 def create_book():
     form = BookForm(request.form)
     books = Book.query.all()
@@ -155,10 +155,23 @@ def create_book():
         return redirect(url_for("create_book"))
     return render_template("bookList.html", title="Books", form=form, books=books)
 
+# Create Modify endpoint
+@app.route('/book/modify/add/mode', methods=['GET','POST'])
+def modify_mode():
+    form = BookForm(request.form)
+    books = Book.query.all()
+    if form.validate_on_submit():
+        book = Book(author=form.author.data, title=form.title.data)
+        db.session.add(book)
+        db.session.commit()
+        flash("Added Book Successfully")
+        return redirect(url_for("modify_mode"))
+    return render_template("modifyMode.html", title="Books", form=form, books=books)
+
 # Create a Modify endpoint
-@app.route('/book/modify', methods=['GET','POST'])
+@app.route('/book/modify/add/mode', methods=['GET','POST'])
 def modify():
-        return render_template('modify.html', title='Modify')
+        return render_template('modifyMode.html', title='AddMode')
 
 # Create a Modify_add endpoint
 @app.route('/book/modify/add', methods=['GET','POST'])
@@ -191,7 +204,7 @@ def update_book(book_id):
         flash("Updated Book Successfully")
         return redirect(url_for("create_book")) #TODO
     # return render_template("books.html", title="Book", form=form, book=Book.query.all())
-    return render_template("bookList.html", title="Update", form=form, book=book)
+    return render_template("update.html", title="Update", form=form, book=book)
 
 # Run Server
 if __name__ == '__main__':

@@ -18,7 +18,7 @@ class LoginForm(FlaskForm):
 
 class BookForm(FlaskForm):
     author = StringField('Author', validators=[DataRequired(), Length(min=2, max=40)])
-    author1 = TextAreaField('OCR')
+    ocr_text = TextAreaField('Text extracted from cover of book')
     title = StringField('Title', validators=[DataRequired(), Length(min=1, max=60)])
     submit = SubmitField('Save')
 

@@ -4,20 +4,39 @@
 <title>Mode</title>
 <h2>Choose mode</h2>
 <div class="content-section">
-             <div class="form-group">
-                 </div>
+             <div class="form-group"> </div>
+                <nav>
+                    <div class="border-top pt-3">
+                      <a class="text-muted">
+                      <a class="ml-2" href="{{ url_for('create_book') }}">Manualy</a>
+                      </a>
+                    </div>
+                </nav>
 
-            <div class="border-top pt-3">
-                <small class="text-muted">
-                Done? <a class="ml-2" href="{{ url_for('create_book') }}"> Manual </a>
-                </small>
-            </div>
+                <nav>
+                    <div class="border-top pt-3">
+                      <a class="text-muted">
+                      <a class="ml-2" href="{{ url_for('create_book_CSV') }}">CSV</a>
+                      </a>
+                    </div>
+                </nav>
 
-            <div class="border-top pt-3">
+                <nav>
+                    <div class="border-top pt-3">
+                      <a class="text-muted">
+                      <a class="ml-2" href="{{ url_for('create_book_NLP') }}">NLP</a>
+                      </a>
+                    </div>
+                </nav>
+                <nav>
+                    <div class="border-top pt-3">
                 <small class="text-muted">
                 Done? <a class="ml-2" href="{{ url_for('modify_add_capture') }}"> Capture </a>
                 </small>
-            </div>
+                </div>
+                </nav>
+
+
 
             <div class="border-top pt-3">
                 <small class="text-muted">
