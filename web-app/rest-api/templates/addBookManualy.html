@@ -1,11 +1,10 @@
+
 {% extends "layout.html" %}
-
 {% block content %}
-<title>Update</title>
-<h4> Update the book data </h4>
-
+<h4> Enter new book </h4>
 <form action="" method="POST">
 
+    <table>
         <tbody>
             {{ form.hidden_tag() }}
             <tr>
@@ -28,42 +27,14 @@
                     {% endfor %}
                 </td>
             </tr>
+
+
+
         </tbody>
 
-        <tfoot>
-            <tr>
-                <th>
-                    {{ form.submit() }}
-                </th>
-            </tr>
-        </tfoot>
 
+
+    </table>
 </form>
-<form action="/index">
-    <img class="fit-picture"
-     src="Flask.jpg"
-     alt="Is this picture readable">
-</form>
-
- <object type="application/pdf"
-    data="Flask.jpg"
-    width="250"
-    height="200">
-</object>
-
-<h2>The ocr result</h2>
-<!-- <p> <object id="frame" type="text/html" data="result" width="100%" height="100%"></object>-->
-
-
-<label for="">OCR text</label>
-<object type="document"
-    data="/result"
-    width="150"
-    height="60">
-</object>
-<textarea id="" name="" rows="4" cols="50">
-  </textarea>
-  <br><br>
-  <input type="submit" value="Save">
-</form>
+{{ form.submit() }}
 {% endblock content %}

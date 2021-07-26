@@ -2,14 +2,21 @@
 
 {% block content %}
 <title>Mode</title>
+<h1>Add new book</h1>
 <h2>Choose mode</h2>
 <div class="content-section">
              <div class="form-group"> </div>
                 <nav>
                     <div class="border-top pt-3">
                       <a class="text-muted">
-                      <a class="ml-2" href="{{ url_for('create_book') }}">Manualy</a>
+                      <a class="ml-2" href="{{ url_for('create_book_manualy') }}">Manualy</a>
                       </a>
+                    </div>
+                </nav>
+                <nav>
+                    <div class="border-top pt-3">
+                        <a class="text-muted">
+                        <a class="ml-2" href="{{ url_for('modify_add_capture') }}"> Capture </a></a>
                     </div>
                 </nav>
 
@@ -20,7 +27,6 @@
                       </a>
                     </div>
                 </nav>
-
                 <nav>
                     <div class="border-top pt-3">
                       <a class="text-muted">
@@ -28,19 +34,13 @@
                       </a>
                     </div>
                 </nav>
-                <nav>
-                    <div class="border-top pt-3">
-                <small class="text-muted">
-                Done? <a class="ml-2" href="{{ url_for('modify_add_capture') }}"> Capture </a>
-                </small>
-                </div>
-                </nav>
+
 
 
 
             <div class="border-top pt-3">
                 <small class="text-muted">
-                Done? <a class="ml-2" href="{{ url_for('index') }}"> Return to Home Paqge</a>
+                Done? <a class="ml-2" href="{{ url_for('index') }}"> Return to Home Page</a>
                 </small>
             </div>
 </div>

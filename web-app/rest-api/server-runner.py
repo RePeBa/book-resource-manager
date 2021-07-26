@@ -142,9 +142,23 @@ def modify_add_json():
 
     return book_schema.jsonify(new_book)
 
+
+# # Create / Modify_manual endpoint
+# @app.route('/book/modify/add/mode/manual', methods=['GET','POST'])
+# def modify_book():
+#     form = BookForm(request.form)
+#     books = Book.query.all()
+#     if form.validate_on_submit():
+#         book = Book(author=form.author.data, title=form.title.data)
+#         db.session.add(book)
+#         db.session.commit()
+#         flash("Added Book Successfully")
+#         return redirect(url_for("create_book"))
+#     return render_template("bookList.html", title="Books", form=form, books=books)
+
 # Create / Modify_manual endpoint
 @app.route('/book/modify/add/mode/manual', methods=['GET','POST'])
-def create_book():
+def create_book_manualy():
     form = BookForm(request.form)
     books = Book.query.all()
     if form.validate_on_submit():
@@ -152,8 +166,8 @@ def create_book():
         db.session.add(book)
         db.session.commit()
         flash("Added Book Successfully")
-        return redirect(url_for("create_book"))
-    return render_template("bookList.html", title="Books", form=form, books=books)
+        return redirect(url_for("create_book_manualy"))
+    return render_template("addBookManualy.html", title="Add", form=form, books=books)
 
 # Create Modify endpoint
 @app.route('/book/modify/add/mode', methods=['GET','POST'])
@@ -164,14 +178,13 @@ def modify_mode():
         book = Book(author=form.author.data, title=form.title.data)
         db.session.add(book)
         db.session.commit()
-        flash("Added Book Successfully")
         return redirect(url_for("modify_mode"))
-    return render_template("modifyMode.html", title="Books", form=form, books=books)
-
-# Create a Modify endpoint
-@app.route('/book/modify/add/mode', methods=['GET','POST'])
-def modify():
-        return render_template('modifyMode.html', title='AddMode')
+    return render_template("modifyMode.html", title="AddMode", form=form, books=books)
+#
+# # Create a Modify endpoint
+# @app.route('/book/modify/add/mode', methods=['GET','POST'])
+# def modify():
+#         return render_template('modifyMode.html', title='AddMode')
 
 # Create a Modify_add endpoint
 @app.route('/book/modify/add', methods=['GET','POST'])
@@ -183,7 +196,7 @@ def modify_add():
 def get_books():
     form = BookForm(request.form)
     books = Book.query.all()
-    return render_template("list.html", title="Books", form=form, books=books)
+    return render_template("list.html", title="List", form=form, books=books)
 
 # Delete Book
 @app.route("/book/modify/delete/<int:book_id>", methods=["GET", "POST"])
@@ -202,8 +215,8 @@ def update_book(book_id):
         form.populate_obj(book)
         db.session.commit()
         flash("Updated Book Successfully")
-        return redirect(url_for("create_book")) #TODO
-    # return render_template("books.html", title="Book", form=form, book=Book.query.all())
+        return redirect(url_for("modify_mode")) #TODO
+    # return render_template("createBooksManualy.html", title="Book", form=form, book=Book.query.all())
     return render_template("update.html", title="Update", form=form, book=book)
 
 # Run Server
